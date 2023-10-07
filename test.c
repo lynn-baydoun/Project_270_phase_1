@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <stdio.h> //in/out
+#include <stdlib.h> //memory alloc
+#include <string.h> //string manipulation
+#include <time.h> // time and randomness
 
-#define MAX_SPELLS 100
-#define SPELL_LENGTH 20
+#define MAX_SPELLS 100  //max number of spells
+#define SPELL_LENGTH 30  // max length of spell 
 
 // Define a struct to represent a spell
 struct Spell {
@@ -22,12 +22,12 @@ int isSpellRepeated(struct Spell *chosenSpells, int numChosenSpells, char *spell
     return 0; // Spell is not repeated
 }
 
-// Function to check if two spells match
+// Function to check if two spells match (last letter of previous spell with the first letter of the new spell)
 int doSpellsMatch(char *spell1, char *spell2) {
     return (spell1[strlen(spell1) - 1] == spell2[0]);
 }
 
-// Function to check if there are available spells that satisfy the last letter and first letter condition
+// Function to check if there are available spells that satisfy the last letter and first letter condition (this will help with terminating the game and annoucing the winner)
 int areAvailableSpells(struct Spell *spells, int numSpells, struct Spell *chosenSpells, int numChosenSpells) {
     for (int i = 0; i < numSpells; i++) {
         if (!spells[i].isUsed && spells[i].name[0] == chosenSpells[numChosenSpells - 1].name[strlen(chosenSpells[numChosenSpells - 1].name) - 1]) {
@@ -86,7 +86,7 @@ int main() {
     int p = rand() % 2 + 1;
     printf("\n%s will start.\n", (currentPlayer == 1) ? player1 : player2);
 
-    while (availableSpells > 0) { // Check if there are available spells left
+    while (availableSpells > 0) { // Check if there are available spells left 
         int validMove = 0;
         char chosenSpell[SPELL_LENGTH];
 
