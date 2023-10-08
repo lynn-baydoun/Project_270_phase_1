@@ -94,20 +94,6 @@ int main() {
         printf("Enter a spell, %s: ", (currentPlayer == 1) ? player1 : player2);
         scanf("%s", chosenSpell);
 
-        // Check if the spell is in the list of available spells
-        int spellIndex = -1;
-        for (int i = 0; i < numSpells; i++) {
-            if (strcmp(spells[i].name, chosenSpell) == 0 && !spells[i].isUsed) {
-                spellIndex = i;
-                break;
-            }
-        }
-
-        if (spellIndex == -1) {
-            printf("Invalid spell! %s wins because the other player entered a spell not in the list.\n", (currentPlayer == 1) ? player2 : player1);
-            break;
-        }
-
         if (numChosenSpells > 0) {
             // Check if the spell has already been cast
             if (isSpellRepeated(chosenSpells, numChosenSpells, chosenSpell)) {
@@ -120,6 +106,20 @@ int main() {
                 printf("Invalid spell! %s wins because the other player chose a spell that does not match the last character.\n", (currentPlayer == 1) ? player2 : player1);
                 break;
             }
+        }
+
+        // Check if the spell is in the list of available spells
+        int spellIndex = -1;
+        for (int i = 0; i < numSpells; i++) {
+            if (strcmp(spells[i].name, chosenSpell) == 0 && !spells[i].isUsed) {
+                spellIndex = i;
+                break;
+            }
+        }
+
+        if (spellIndex == -1) {
+            printf("Invalid spell! %s wins because the other player entered a spell not in the list.\n", (currentPlayer == 1) ? player2 : player1);
+            break;
         }
 
         // Mark the chosen spell as used
