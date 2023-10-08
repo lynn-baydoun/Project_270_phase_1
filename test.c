@@ -1,3 +1,4 @@
+// Github: https://github.com/lynn-baydoun/Project_270_phase_1.git
 #include <stdio.h> //in/out
 #include <stdlib.h> //memory alloc
 #include <string.h> //string manipulation
