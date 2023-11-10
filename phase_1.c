@@ -97,6 +97,33 @@ int HumanTurn(char *chosenSpell, char player1[],int numSpells, struct Spell *spe
     return isValid(numSpells,chosenSpell,spells,numChosenSpells,chosenSpells,1,player1);
 }
 
+//Function that is used in games for decision making
+int minimax(struct Spell *spells, int numSpells, char prevSpell[SPELL_LENGTH], int difficulty){
+    if (numSpells == 0){
+        return (difficulty == 2) ? -1 : 1;
+    }//In hard mode, bot tries to maximize its score.
+    int bestScore = (difficulty == 2) ? - 1 : 1;
+
+    for(int i = 0; i < numSpells; i++){
+        if(!spells[i].isUsed && doSpellsMatch(prevSpell, spells[i].name, NULL)){
+            char newPrevSpell[SPELL_LENGTH];
+            strcpy(newPrevSpell, spells[i].name);
+            int newScore = minimax(spells, numSpells - 1, newPrevSpell, difficulty);
+            if(difficulty == 2){
+                if (newScore > bestScore){
+                    bestScore = newScore;
+                }
+            }
+            else{
+                if (newScore < bestScore){
+                    bestScore = newScore;
+                }
+            }
+        }
+    }
+    return bestScore;
+}
+
 int BotTurn(int difficulty, struct Spell *spells,int numSpells,int *numChosenSpells,struct Spell *chosenSpells,int loser,char player1[]){
     int result = 0;
     if(difficulty == 0 || *numChosenSpells==0){
@@ -117,6 +144,28 @@ int BotTurn(int difficulty, struct Spell *spells,int numSpells,int *numChosenSpe
             }
         }
     }
+    //The bot uses the minimax algorithm to select the best move.
+    else if(difficulty == 2){
+        int bestScore = -1;
+        int bestMoveIndex = - 1;
+        for (int i = 0; i < numSpells; i++){
+            if(!spells[i].isUsed){
+                char *currentSpell = spells[i].name;
+                int currentScore = minimax(spells, numSpells, currentSpell, difficulty);
+                if(currentScore > bestScore){
+                    bestScore = currentScore;
+                    bestMoveIndex = i;
+                }
+            }
+        }  
+        if(bestMoveIndex != -1){
+            result = 1;
+            spells[bestMoveIndex].isUsed = 1;
+            (*numChosenSpells)++;
+            strcpy(chosenSpells[*numChosenSpells - 1].name, spells[bestMoveIndex].name);
+            printf("Computer's choice:%s\n", spells[bestMoveIndex].name);
+        }
+    }
 
     return result;
 }
@@ -130,7 +179,7 @@ int main()
     char player1[30], player2[30];
     int availableSpells;
     char *chosenSpell = (char*) malloc(sizeof(char)*SPELL_LENGTH) ;
-
+  
     // Read spells from 'spells.txt' file
     file = fopen("spells.txt", "r");
     if (file == NULL)
