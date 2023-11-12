@@ -1,3 +1,4 @@
+//https://github.com/lynn-baydoun/Project_270_phase_1.git
 #include <stdio.h>  //in/out
 #include <stdlib.h> //memory alloc
 #include <string.h> //string manipulation
@@ -126,15 +127,15 @@ int minimax(struct Spell *spells, int numSpells, char prevSpell[SPELL_LENGTH], i
 
 int BotTurn(int difficulty, struct Spell *spells,int numSpells,int *numChosenSpells,struct Spell *chosenSpells,int loser,char player1[]){
     int result = 0;
-    if(difficulty == 0 || *numChosenSpells==0){
+    if(difficulty == 0 || *numChosenSpells == 0){
         int index = (int) rand() % numSpells; 
         char *chosenSpellBot = spells[index].name;
         printf("Computer's choice: %s\n",spells[index].name);
-        result = isValid(numSpells,chosenSpellBot,spells,numChosenSpells,chosenSpells,0,player1);        
-    }else if(difficulty==1){
-        for(int i=0;i<numSpells;i++){
+        result = isValid(numSpells, chosenSpellBot, spells, numChosenSpells, chosenSpells, 0, player1);        
+    }else if(difficulty == 1){
+        for(int i = 0;i < numSpells;i++){
             char *currentSpell = spells[i].name;
-            if(doSpellsMatch(chosenSpells[*numChosenSpells-1].name,currentSpell,numChosenSpells) && !spells[i].isUsed){
+            if(doSpellsMatch(chosenSpells[*numChosenSpells - 1].name, currentSpell, numChosenSpells) && !spells[i].isUsed){
                 result = 1;
                 spells[i].isUsed = 1;
                 (*numChosenSpells)++; 
@@ -161,8 +162,8 @@ int BotTurn(int difficulty, struct Spell *spells,int numSpells,int *numChosenSpe
         if(bestMoveIndex != -1){
             result = 1;
             spells[bestMoveIndex].isUsed = 1;
+            strcpy(chosenSpells[*numChosenSpells].name, spells[bestMoveIndex].name);
             (*numChosenSpells)++;
-            strcpy(chosenSpells[*numChosenSpells - 1].name, spells[bestMoveIndex].name);
             printf("Computer's choice:%s\n", spells[bestMoveIndex].name);
         }
     }
@@ -176,9 +177,10 @@ int main()
     struct Spell spells[MAX_SPELLS];
     struct Spell chosenSpells[MAX_SPELLS];
     int numSpells, numChosenSpells = 0;
-    char player1[30], player2[30];
+    char player1[30];
     int availableSpells;
     char *chosenSpell = (char*) malloc(sizeof(char)*SPELL_LENGTH) ;
+   
   
     // Read spells from 'spells.txt' file
     file = fopen("spells.txt", "r");
